@@ -4,26 +4,61 @@ using BackExeBooks1.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Data.SqlTypes;
+using BackExeBooks1.Managers;
 
-namespace Pain.Suffer.Controllers
+namespace BackExeBooksex
 {
     [ApiController]
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly UsersContext _userscontext;
-        public UsersController(UsersContext usercontext)
+        private readonly booksContext _userscontext;
+        public UsersController(booksContext usercontext)
         {
             _userscontext = usercontext;
         }
 
+        [HttpPut]
+        [Route("role")]
+        public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRole roleupdate)
+        {
+            var user = await _userscontext.Users.FirstOrDefaultAsync(x => x.UserId == roleupdate.UserId);
+
+            if (user != null)
+            {
+                user.role = roleupdate.role;
+                await _userscontext.SaveChangesAsync();
+                return Ok(roleupdate);
+            }
+            else
+            {
+                return Ok(roleupdate);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserMoney moneyupdate)
+        {
+            var user = await _userscontext.Users.FirstOrDefaultAsync(x => x.UserId == moneyupdate.UserId);
+
+            if (user != null)
+            {
+                user.Money += moneyupdate.Money;
+                await _userscontext.SaveChangesAsync();
+                return Ok(moneyupdate);
+            }
+            else
+            {
+                return Ok(moneyupdate);
+            }
+            }
+
         [HttpPost]
-        public async Task<IActionResult> Post(Users person)
+        public async Task<IActionResult> Post(UsersCreate person)
         {
             try
             {
                 _userscontext.Users.Add(person);
-                _userscontext.SaveChanges();
                 await _userscontext.SaveChangesAsync();
                 return Ok(person);
             }

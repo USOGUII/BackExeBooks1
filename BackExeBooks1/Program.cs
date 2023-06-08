@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 
-    builder.Services.AddDbContext<UsersContext>(options =>
+builder.Services.AddDbContext<booksContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ShopContext1"));
 });
@@ -44,5 +44,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();
