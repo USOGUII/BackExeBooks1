@@ -1,21 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using BackExeBooks1.Managers;
 using BackExeBooks1.Models;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Data.SqlTypes;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using BackExeBooks1.Managers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace BackExeBooksex
+namespace BackExeBooks1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class AuthorBooksController: ControllerBase
     {
         private readonly booksContext _bookscontext;
-        public BooksController(booksContext usercontext)
+        public AuthorBooksController(booksContext usercontext)
         {
             _bookscontext = usercontext;
         }
@@ -24,15 +19,17 @@ namespace BackExeBooksex
         [Route("GetList/{userId:int}")]
         public async Task<IActionResult> GetById(int userId)
         {
-            var books = _bookscontext.Books
-                .Join(_bookscontext.PurchaseLists,
-                u => u.BookId,
-                c => c.BookId,
+            var books = _bookscontext.AuthorBooks
+                .Join(_bookscontext.PurchaseListAs,
+                u => u.AuthorBookId,
+                c => c.AuthorBookId,
                 (u, c) => new
                 {
                     UserId = c.UserId,
-                    BookId = c.BookId,
-                    BookAuthor = u.BookAuthor,
+                    authBookId = c.AuthorBookId,
+                    authName = u.authName,
+                    authFamiliya = u.authFamiliya,
+                    authOtchestvo = u.authOtchestvo,
                     BookName = u.BookName,
                     BookDate = u.BookDate,
                     BookDescription = u.BookDescription,
@@ -48,13 +45,15 @@ namespace BackExeBooksex
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateBookRequest request)
+        public async Task<IActionResult> Post([FromBody] CreateAuthorBook request)
         {
             try
             {
-                Book newBook = new Book()
+                AuthorBook newBook = new AuthorBook()
                 {
-                    BookAuthor = request.BookAuthor,
+                    authName = request.authName,
+                    authFamiliya = request.authFamiliya,
+                    authOtchestvo = request.authOtchestvo,
                     BookName = request.BookName,
                     BookDate = request.BookDate,
                     BookDescription = request.BookDescription,
@@ -65,10 +64,10 @@ namespace BackExeBooksex
                     BookUrl = request.BookUrl
                 };
 
-                var publishingHouse = _bookscontext.PublishingHouses.FirstOrDefault(x => x.PublishingHouseId == request.PublishingHouseId);
-                newBook.PublishingHouseId = publishingHouse.PublishingHouseId;
+                var authorbook = _bookscontext.Authors.FirstOrDefault(x => x.AuthorId == request.AuthorId);
+                newBook.AuthorId = authorbook.AuthorId;
 
-                _bookscontext.Books.Add(newBook);
+                _bookscontext.AuthorBooks.Add(newBook);
                 await _bookscontext.SaveChangesAsync();
                 return Ok();
             }
@@ -82,7 +81,7 @@ namespace BackExeBooksex
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var books = await _bookscontext.Books.ToListAsync();
+            var books = await _bookscontext.AuthorBooks.ToListAsync();
             return Ok(books);
         }
     }

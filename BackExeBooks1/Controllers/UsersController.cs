@@ -58,6 +58,16 @@ namespace BackExeBooksex
         {
             try
             {
+                var users1 = _userscontext.Users.Where(p => p.email == person.email);
+                if (users1.Any())
+                {
+                    throw new Exception("Пользователь с такой почтой уже существует");
+                }
+                var users = _userscontext.Users.Where(p => p.UserLogin == person.UserLogin);
+                if (users.Any())
+                {
+                    throw new Exception("Пользователь с таким логином уже существует");
+                }
                 _userscontext.Users.Add(person);
                 await _userscontext.SaveChangesAsync();
                 return Ok(person);
@@ -65,9 +75,10 @@ namespace BackExeBooksex
             catch (Exception ex)
             {
                 string msg = ex.Message;
-                return Ok(msg);
+                return BadRequest(msg);
             }
         }
+        record class Error(string Message);
 
         [HttpGet]
         public async Task<IActionResult> Get()

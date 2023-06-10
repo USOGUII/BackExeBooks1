@@ -11,5 +11,6 @@
         public string BookLenght { get; set; }
         public string imgUrl { get; set; }
         public int PublishingHouseId { get; set; }
+        public string BookUrl { get; set; }
     }
 }

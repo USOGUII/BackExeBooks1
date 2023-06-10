@@ -20,7 +20,15 @@ namespace BackExeBooks1.Models
         [Required]
         public string BookLenght { get; set; }
         [Required]
+        public string authName { get; set; }
+        [Required]
+        public string authFamiliya { get; set; }
+        [Required]
+        public string authOtchestvo { get; set; }
+        [Required]
         public string imgUrl { get; set; }
+        [Required]
+        public string BookUrl { get; set; }
         [Required]
         public int AuthorId { get; set; }
         [ForeignKey(nameof(AuthorId))]

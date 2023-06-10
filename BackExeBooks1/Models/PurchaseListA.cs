@@ -13,6 +13,6 @@ namespace BackExeBooks1.Models
         public User? User { get; set; }
         public int? AuthorBookId { get; set; }
         [ForeignKey(nameof(AuthorBookId))]
-        public AuthorBook? AuthorBook { get; set; }
+        public AuthorBook? AuthorBook { get; set; } 
     }
 }

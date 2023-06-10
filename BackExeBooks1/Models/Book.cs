@@ -25,6 +25,8 @@ namespace BackExeBooks1.Models
         [Required]
         public string imgUrl { get; set; }
         [Required]
+        public string BookUrl { get; set; }
+        [Required]
         public int PublishingHouseId { get; set; }
         [ForeignKey(nameof(PublishingHouseId))]
         public PublishingHouse PublishingHouse { get; set; }
